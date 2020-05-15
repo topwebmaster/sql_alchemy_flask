@@ -1,0 +1,30 @@
+version: '3'
+
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backups: {}
+
+
+
+services:
+
+  postgres:
+      build:
+        context: .
+        dockerfile: ./compose/production/postgres/Dockerfile
+      image: sql_alchemy_flask_production_postgres
+      volumes:
+        - local_postgres_data:/var/lib/postgresql/data
+        - local_postgres_data_backups:/backups
+      env_file:
+        - ./.envs/.local/.postgres
+      ports:
+        - "5433:5432"
+
+  redis:
+    image: 5.0
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    ports:
+      - "8025:8025"
